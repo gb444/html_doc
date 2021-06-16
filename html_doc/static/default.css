@@ -1,0 +1,15 @@
+
+* {
+    font-family: sans-serif;
+
+}
+
+div.page_break {
+    page-break-after: always;
+}
+
+
+img {
+    width: auto;
+    height: auto;
+}
