@@ -21,3 +21,17 @@ def get_element_style_string(styles):
         return ' style="{}"'.format(' '.join([f'{key}:{value};' for key, value in final_styles]))
     else:
         return ""
+
+
+def get_classes_string(classes):
+    if classes is None or len(classes) == 0:
+        return ''
+    else:
+        return ' class="{}"'.format(' '.join(classes))
+
+
+def get_id_string(id_):
+    if id_ is not None:
+        return ' id="{}"'.format(id_)
+    else:
+        return ''

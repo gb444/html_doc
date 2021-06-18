@@ -59,8 +59,54 @@ def make_standard_doc():
     with d.a(href="#title"):
         d.raw("A link 1")
 
+    easy_table(d)
+    pandas_table(d)
+    basic_plot(d)
     d.a(href="#title", content='A link 2')
     return d
+
+def basic_table(d:HtmlDoc):
+    with d.table_el:
+        with d.thead:
+            with d.tr:
+                d.td("Col 1")
+                d.td("Col 2")
+        for i in range(3):
+            with d.tr:
+                d.td(f"{i}-1")
+                d.td(f"{i}-2")
+
+
+def easy_table(d: HtmlDoc):
+    d.easy_table([[f"{i}-{j}" for i in range(2)] for j in range(3)], columns=[f"Col {i}" for i in range(2)])
+    d.easy_table([[f"{i}-{j}" for i in range(2)] for j in range(3)], columns=[f"Col {i}" for i in range(2)], clear_rows=True)
+    d.easy_table([[f"{i}-{j}" for i in range(2)] for j in range(3)], columns=[f"Col {i}" for i in range(2)], clear_columns=True)
+    d.easy_table([[f"{i}-{j}" for i in range(2)] for j in range(3)], columns=[f"Col {i}" for i in range(2)], clear_rows=True, clear_columns=True)
+
+def pandas_table(d: HtmlDoc):
+    import pandas as pd
+    df = pd.DataFrame([[1,2,3],[3,4,5]], columns=('first', 'second', 'third'), index=('alpha', 'beta'))
+    d.easy_table(df)
+    d.easy_table(df, show_index=True)
+    d.easy_table(df['first'])
+
+def basic_plot(d: HtmlDoc):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    # Data for plotting
+    t = np.arange(0.0, 2.0, 0.01)
+    s = 1 + np.sin(2 * np.pi * t)
+
+    plt.plot(t, s)
+
+    plt.gca().set(xlabel='time (s)', ylabel='voltage (mV)',
+           title='About as simple as it gets, folks')
+    plt.grid()
+    d.easy_plot()
+    d.easy_plot(render_as='raster')
+    d.easy_plot(plt.gcf())
+
 
 def test_document():
     d = make_standard_doc()
@@ -86,4 +132,5 @@ def test_extend():
 
 if __name__ == '__main__':
     test_pdf()
-    #test_extend()
+    test_document()
+    test_extend()

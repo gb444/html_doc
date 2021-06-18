@@ -12,4 +12,48 @@ div.page_break {
 img {
     width: auto;
     height: auto;
+    display:block;
+}
+
+img.plot {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+table.default-style {
+    border-collapse: collapse;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+
+table.default-style td, table.default-style th {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}
+
+table.default-style thead td, table.default-style thead th {
+    padding-right:2em;
+    border-bottom: 1px solid black;
+}
+
+table.default-style tfoot td, table.default-style tfoot th {
+    border-top: 1px solid black;
+}
+
+table.default-style.clear-rows tr:nth-child(2n) {
+    background-color: #F0F0F0;
+}
+
+table.default-style.clear-columns td {
+    border-left: 1px solid black;
+    padding-left:0.5em;
+}
+
+table.default-style.clear-columns td:nth-child(1) {
+    border-left: none;
+    padding-left: 0;
 }

@@ -1,6 +1,6 @@
 from os.path import splitext
 
-from .html_format_utils import base64_encode, get_element_style_string
+from .html_format_utils import base64_encode, get_element_style_string, get_classes_string, get_id_string
 from .tag_obj import TagDispatcher, BasicTagTemplate, tag_magic, FunctionTagTemplate
 
 def easy_tag_maker(tag, initial_classes=None, initial_id=None):
@@ -28,6 +28,14 @@ li = easy_tag_maker('li')
 
 page_break = easy_tag_maker('div', initial_classes=['page_break'])
 
+table_el = easy_tag_maker('table', initial_classes=['default-style'])
+thead = easy_tag_maker('thead')
+tbody = easy_tag_maker('tbody')
+tfoot = easy_tag_maker('tfoot')
+tr = easy_tag_maker('tr')
+td = easy_tag_maker('td')
+th = easy_tag_maker('th')
+
 
 @easy_function_tag
 def raw(content):
@@ -46,7 +54,7 @@ def get_content_uri(type_, content):
     return data_uri_templ.format(type_, base64_encode(content))
 
 @easy_function_tag
-def img(png=None, jpg=None, svg=None, path=None, alt=None, width=None, height=None):
+def img(png=None, jpg=None, svg=None, path=None, alt=None, width=None, height=None, classes=None, id_=None):
     if png is not None:
         content = get_content_uri('png', png)
     elif jpg is not None:
@@ -67,7 +75,7 @@ def img(png=None, jpg=None, svg=None, path=None, alt=None, width=None, height=No
         raise TypeError("One of png, jpg or svg should be specified")
     altf = '' if alt is None else f' alt="{alt}"'
     styles = get_element_style_string({'width':width, 'height':height})
-    return f'<img src="{content}"{altf}{styles}/>'
+    return f'<img {get_classes_string(classes)}{get_id_string(id_)} src="{content}"{altf}{styles}/>'
 
 @easy_function_tag
 def anchor(id_):

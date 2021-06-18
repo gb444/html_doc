@@ -23,7 +23,10 @@ class HtmlDoc():
     from .tags import ul, li, ol
     from .tags import img, svg
     from .tags import br, page_break, hline, anchor
+    from .tags import table_el, thead, tbody, tfoot, td, tr, th
 
+    from .table import easy_table
+    from .figure import easy_plot
 
     ### Clever bits
     def remove_element_from_top(self, tag):

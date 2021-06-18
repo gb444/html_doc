@@ -1,5 +1,5 @@
 from html import escape
-from .html_format_utils import smart_conditional_tab_in, get_element_style_string
+from .html_format_utils import smart_conditional_tab_in, get_element_style_string, get_classes_string, get_id_string
 
 
 class BaseTagTemplate():
@@ -62,12 +62,8 @@ class BasicTagTemplate(BaseTagTemplate):
         self.escape = escape
 
     def get_templ(self, classes, id_, styles):
-        classesf = ''
-        if len(classes) > 0:
-            classesf = ' class="{}"'.format(' '.join(classes))
-        idf = ''
-        if id_ is not None:
-            idf = ' id="{}"'.format(id_)
+        classesf = get_classes_string(classes)
+        idf = get_id_string(id_)
         outer = f"<{self.tag}{idf}{classesf}{get_element_style_string(styles)}>{{}}</{self.tag}>"
         return outer
 

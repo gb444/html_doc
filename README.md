@@ -43,7 +43,8 @@ As we know, HTML uses nested tags for more or less anything, and html_doc makes 
 ```python
 with d.div:
     d.p("This p is in the div")
-    d.p("This p is in the div")
+    with d.p:
+        d.ital("This an i in a p in the div")
 ```
 
 If we wanted to add a class to that, we can invoke it with arguments (this is possibly rather counterintuitive)
@@ -55,7 +56,7 @@ with d.div(classes=['my-class']):
 
 If we're just adding one nested tag, we can be a bit cheeky:
 ```python
-d.p(d.ital("Italic in a para"))
+d.p(d.ital("Italic in a p"))
 ```
 
 ## Raw HTML
@@ -87,3 +88,40 @@ d.img(path='tests/example.svg', width="2in")
 d.img(path='tests/example.svg', height="25mm")
 ```
 
+## Tables
+Although one can construct tables the old fashioned way with lots of nested elements, this is rather dry and 
+requires too much knowledge of html for casual tableage:
+
+```python
+d.easy_table([['row 1, col 1', 'row 1, col 2'],
+              ['row 2, col 1', 'row 2, col 2']],
+             columns=['Column 1', 'Column 2'])
+
+d.easy_table(df) # Pandas dataframes also supported
+
+```
+
+## Figures
+Matplotlib figures are easy too:
+```python
+    import matplotlib.pyplot as plt
+    import numpy as np
+    # Data for plotting
+    t = np.arange(0.0, 2.0, 0.01)
+    s = 1 + np.sin(2 * np.pi * t)
+
+    plt.plot(t, s)
+
+    plt.gca().set(xlabel='time (s)', ylabel='voltage (mV)',
+           title='About as simple as it gets, folks')
+    plt.grid()
+    d.easy_plot()
+    d.easy_plot(render_as='raster') 
+    d.easy_plot(plt.gcf(), fix_size=False)
+    d.easy_plot(size_inches=(3,2))
+    d.easy_plot(size_cm=(10,5))
+    
+
+```
+By default it renders via svg but this doesn't work 100% of the time (had problems with error bars) 
+and can be slow to view for plots with 1000s of lines/points. 
