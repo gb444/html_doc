@@ -35,6 +35,7 @@ d.h1("Heading")
 d.p("This is the first paragraph of the document")
 
 d.to_pdf("output.pdf")
+d.to_html("output.html")
 ```
 
 

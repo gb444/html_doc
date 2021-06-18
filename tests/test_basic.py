@@ -110,9 +110,7 @@ def basic_plot(d: HtmlDoc):
 
 def test_document():
     d = make_standard_doc()
-    r = d.render()
-    with open('tests/outputs/test_document.html', 'w') as f:
-        f.write(r)
+    d.to_html('tests/outputs/test_document.html')
     return d
 
 def test_pdf():

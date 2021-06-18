@@ -112,3 +112,8 @@ class HtmlDoc():
     def to_pdf(self, path):
         from .pdf import export_pdf_to
         export_pdf_to(self, path)
+
+    def to_html(self, path):
+        r = self.render()
+        with open('tests/outputs/test_document.html', 'w') as f:
+            f.write(r)
