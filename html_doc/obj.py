@@ -4,16 +4,19 @@ from .templates import document
 from .html_format_utils import smart_conditional_tab_in
 
 class HtmlDoc():
-    def __init__(self, title=None, css=None, include_default_styles=True):
+    def __init__(self, title=None,
+                 description=None,
+                 author=None,
+                 css=None, include_default_styles=True):
         self.head = []
         self.stack = [[]]
         self.poppers = []
         self.title = title
+        self.description = description
+        self.author = author
         self.provided_css = css
         self.include_default_styles = include_default_styles
         self._tag_joiner = lambda x: '\n'.join(x)
-        self.custom_header=None
-        self.custom_footer=None
     
     
     ### Tags
@@ -99,15 +102,21 @@ class HtmlDoc():
         body = self._tag_joiner([tag.render(self._tag_joiner) for tag in flattened])
         return body
 
+    def get_header_without_styles(self):
+        head = ''
+        if self.title is not None:
+            head += f"""<title>{self.title}</title>"""
+        if self.description is not None:
+            head += f"""<meta name="description" content="{self.description}">"""
+        if self.author is not None:
+            head += f"""<meta name="author" content="{self.author}">"""
+        return head
 
     def render(self):
         body = self.get_body_internals()
         styles_elements = '\n'.join([f'<style>\n{css}\n</style>' for css in self.get_styles()])
-        head = f"""<title>{self.title}</title>
-          <meta name="description" content="">
-          <meta name="author" content="">
-          {styles_elements}
-        """
+        head = self.get_header_without_styles()
+        head += styles_elements
         return document.format(body=smart_conditional_tab_in(body), head=head)
 
 
@@ -117,5 +126,5 @@ class HtmlDoc():
 
     def to_html(self, path):
         r = self.render()
-        with open('tests/outputs/test_document.html', 'w') as f:
+        with open(path, 'w') as f:
             f.write(r)
