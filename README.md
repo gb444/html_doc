@@ -58,6 +58,13 @@ with d.div(classes=['my-class']):
 If we're just adding one nested tag, we can be a bit cheeky:
 ```python
 d.p(d.ital("Italic in a p"))
+d.div(d.p(d.ital("Italic in a p in a div")))
+```
+Alternatively, if you dislike deep nesting or want to do something a bit funny:
+```python
+d.push(d.div)
+d.p("Content")
+d.pop()
 ```
 
 ## Raw HTML

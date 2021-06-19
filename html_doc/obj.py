@@ -61,7 +61,9 @@ class HtmlDoc():
     def pop(self):
         latest = self.stack.pop()
         wrapper = self.poppers.pop()
-        self.stack[-1].append(wrapper(latest))
+        result = wrapper(latest)
+        self.remove_element_from_top(result)
+        self.append(result)
 
     def virtual_pop(self, stack, poppers):
         if len(poppers) > 0:
