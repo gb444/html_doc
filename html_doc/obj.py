@@ -19,7 +19,7 @@ class HtmlDoc():
     ### Tags
     from .tags import h1, h2, h3, h4
     from .tags import p, ital, underline, bold
-    from .tags import div, raw, a
+    from .tags import div, raw, a, pre
     from .tags import ul, li, ol
     from .tags import img, svg
     from .tags import br, page_break, hline, anchor

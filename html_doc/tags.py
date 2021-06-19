@@ -25,6 +25,7 @@ ul = easy_tag_maker('ul')
 ol = easy_tag_maker('ol')
 li = easy_tag_maker('li')
 
+pre = easy_tag_maker('pre')
 
 page_break = easy_tag_maker('div', initial_classes=['page_break'])
 

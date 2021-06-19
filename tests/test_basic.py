@@ -41,6 +41,10 @@ def test_basic_text():
     print(result)
     assert result == "<p>\n\ttext\n\t<br/>\n\ttext\n\t<i>italic</i>\n\t<b>bold</b>\n\t<u>underlined</u>\n</p>"
 
+def test_pre():
+    d = HtmlDoc()
+    d.pre("pre")
+    assert d.get_body_internals() == "<pre>pre</pre>"
 
 def make_standard_doc():
     d = HtmlDoc(title="This is a document")

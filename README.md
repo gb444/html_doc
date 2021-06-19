@@ -67,6 +67,18 @@ d.p("Content")
 d.pop()
 ```
 
+## Text formatting
+
+```python
+with d.p:
+    d.ital("Italics, ")
+    d.bold("bold, ")
+    d.underline("underlined")
+    
+d.pre("Preformatted block text")
+
+```
+
 ## Raw HTML
 
 ```python
