@@ -6,6 +6,42 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from html_doc import HtmlDoc
 
+def test_titles():
+    d = HtmlDoc()
+    d.h1("h1")
+    d.h2("h2")
+    d.h3("h3")
+    d.h4("h4")
+    result = d.get_body_internals()
+    assert result == "<h1>h1</h1>\n<h2>h2</h2>\n<h3>h3</h3>\n<h4>h4</h4>"
+
+def test_nesting():
+    d = HtmlDoc()
+    with d.div:
+        d.p("text")
+    with d.div(classes=["test"]):
+        d.p("text")
+    d.push(d.div)
+    d.p("text")
+    d.pop()
+    d.div(d.p(d.ital("text")))
+    result = d.get_body_internals()
+    assert result == "<div><p>text</p></div>\n<div class=\"test\"><p>text</p></div>\n<div><p>text</p></div>\n<div>\n\t<p><i>text</i></p>\n</div>", result
+
+def test_basic_text():
+    d = HtmlDoc()
+    with d.p:
+        d.raw('text')
+        d.br()
+        d.raw('text')
+        d.ital("italic")
+        d.bold("bold")
+        d.underline("underlined")
+    result = d.get_body_internals()
+    print(result)
+    assert result == "<p>\n\ttext\n\t<br/>\n\ttext\n\t<i>italic</i>\n\t<b>bold</b>\n\t<u>underlined</u>\n</p>"
+
+
 def make_standard_doc():
     d = HtmlDoc(title="This is a document")
 
@@ -129,6 +165,7 @@ def test_extend():
     assert result == expected_result, result
 
 if __name__ == '__main__':
-    test_pdf()
+    #test_pdf()
+    test_nesting()
     test_document()
     test_extend()
