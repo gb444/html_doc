@@ -4,6 +4,10 @@
 
 }
 
+pre, code {
+    font-family: monospace;
+}
+
 div.page_break {
     page-break-after: always;
 }

@@ -71,6 +71,8 @@ def make_standard_doc():
     with d.p(classes=['test']):
         d.raw("Text")
 
+    d.pre("Preformatted text")
+
     d.hline()
     with d.ul:
         d.li(d.p("Item1"))
