@@ -145,3 +145,37 @@ Matplotlib figures are easy too:
 ```
 By default it renders via svg but this doesn't work 100% of the time (had problems with error bars) 
 and can be slow to view for plots with 1000s of lines/points. 
+
+## Other useful stuff
+
+### Timestamps
+This puts a iso formatted timestamp for now in the document with a full utc timestamp attached:
+```python
+d.timestamp() 
+d.timestamp(datetime=datetime(year=1970, month=1, day=1), fmt='%Y/%m/%d', round_millis=False)
+```
+
+### Setting styles or attributes per element
+
+```python
+d.h1(id_="that-one-blue-title", classes=["blue-titles"], styles={"color":"blue"})
+d.pre("d.pre()", attributes={'data-lang':'python'})
+```
+
+### Extending documents
+This is mainly useful if you want a function that returns a chunk of document, but not modify it
+, which is useful for some code patterns or don't want to pass a document into every single function
+```python
+d = HtmlDoc()
+d.h1("Doc 1")
+d2 = HtmlDoc()
+d2.h1("Doc 2")
+with d.div:
+    d.extend(d2)
+# d will now have:
+# <h1>Doc 1</h1>
+# <div>
+#    <h1>Doc 2</h1>
+# </div>
+
+```

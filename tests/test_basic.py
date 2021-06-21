@@ -46,6 +46,14 @@ def test_pre():
     d.pre("pre")
     assert d.get_body_internals() == "<pre>pre</pre>"
 
+def test_timestamp():
+    from datetime import datetime
+    d = HtmlDoc()
+    dt = datetime(year=1970, month=1, day=1, hour=11, minute=12, second=2, microsecond=13134)
+    d.timestamp(datetime=dt, fmt='%Y/%m/%d', round_millis=False)
+    d.timestamp(datetime=dt)
+    assert d.get_body_internals() == '<time datetime="1970-01-01T11:12:02.013134">1970/01/01</time>\n<time datetime="1970-01-01T11:12:02">1970-01-01T11:12:02</time>'
+
 def make_standard_doc():
     d = HtmlDoc(title="This is a document")
 
@@ -58,7 +66,8 @@ def make_standard_doc():
     d.h1("Title")
     d.h2("Subtitle")
     d.h3("Subsubtitle")
-    d.h4("Subsubsubtitle")
+    d.h4("Subsubsubtitle", styles={"color":"blue"})
+    d.timestamp()
     with d.p:
         d.raw('Should have a line break now:')
         d.br()
@@ -71,7 +80,7 @@ def make_standard_doc():
     with d.p(classes=['test']):
         d.raw("Text")
 
-    d.pre("Preformatted text")
+    d.pre("Preformatted text", attributes={'data-lang':'python'})
 
     d.hline()
     with d.ul:
@@ -103,7 +112,7 @@ def make_standard_doc():
 
     easy_table(d)
     pandas_table(d)
-    basic_plot(d)
+    #basic_plot(d)
     d.a(href="#title", content='A link 2')
     return d
 
@@ -175,3 +184,4 @@ if __name__ == '__main__':
     test_nesting()
     test_document()
     test_extend()
+    test_timestamp()

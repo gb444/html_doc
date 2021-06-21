@@ -1,5 +1,6 @@
 from html import escape
-from .html_format_utils import smart_conditional_tab_in, get_element_style_string, get_classes_string, get_id_string
+from .html_format_utils import smart_conditional_tab_in, get_element_style_string, \
+    get_classes_string, get_id_string, get_attributes_string
 
 
 class BaseTagTemplate():
@@ -54,31 +55,34 @@ class BaseTagInstance:
         return self.outer.format(str(self.inner))
 
 class BasicTagTemplate(BaseTagTemplate):
-    def __init__(self, tag, initial_classes = None, initial_id=None, initial_styles=None, escape=True):
+    def __init__(self, tag, initial_classes = None, initial_id=None, initial_styles=None, attributes=None, escape=True):
         self.tag = tag
         self.initial_classes = initial_classes or []
         self.initial_id = initial_id
         self.initial_styles = initial_styles or {}
+        self.attributes = attributes or {}
         self.escape = escape
 
-    def get_templ(self, classes, id_, styles):
+    def get_templ(self, classes, id_, styles, attributes):
         classesf = get_classes_string(classes)
         idf = get_id_string(id_)
-        outer = f"<{self.tag}{idf}{classesf}{get_element_style_string(styles)}>{{}}</{self.tag}>"
+        outer = f"<{self.tag}{idf}{classesf}{get_element_style_string(styles)}{get_attributes_string(attributes)}>{{}}</{self.tag}>"
         return outer
 
-    def instance(self, inner='', classes=None, id_=None, styles=None, escape=None, parent=None):
+    def instance(self, inner='', classes=None, id_=None, styles=None, escape=None, attributes=None, parent=None):
         classes = classes or []
         classes += self.initial_classes
         escape = escape or self.escape
         styles_ = dict(self.initial_styles)
         styles_.update(styles or {})
         id_ = id_ or self.initial_id
-        outer = self.get_templ(classes, id_, styles_)
+        attributes_ = dict(self.attributes)
+        attributes_.update(attributes or {})
+        outer = self.get_templ(classes, id_, styles_, attributes_)
         return BaseTagInstance(outer, inner, escape=escape, parent=parent)
 
     def __str__(self):
-        return self.get_templ(self.initial_classes, self.initial_id, self.initial_styles)
+        return self.get_templ(self.initial_classes, self.initial_id, self.initial_styles, self.attributes)
 
 
 class FunctionTagTemplate(BaseTagTemplate):

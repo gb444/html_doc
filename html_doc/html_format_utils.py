@@ -35,3 +35,11 @@ def get_id_string(id_):
         return ' id="{}"'.format(id_)
     else:
         return ''
+
+
+def get_attributes_string(attrs):
+    r = ' '.join([f'{key}="{value}"' for key, value in attrs.items() if value is not None])
+    if len(r) > 0:
+        return ' '+r
+    else:
+        return ''
