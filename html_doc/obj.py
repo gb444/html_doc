@@ -1,9 +1,12 @@
 from typing import Iterable
+from os.path import join, dirname
 
 from .templates import document
 from .html_format_utils import smart_conditional_tab_in
 
 class HtmlDoc():
+    DEFAULT_CSS_PATHS = [join(dirname(__file__), 'static/default.css')]
+
     def __init__(self, title=None,
                  description=None,
                  author=None,
@@ -85,9 +88,7 @@ class HtmlDoc():
         return stack[0]
 
     def get_default_css(self):
-        from os.path import join, dirname
-        contents = open(join(dirname(__file__), 'static/default.css')).read()
-        return [contents]
+        return [open(path).read() for path in self.DEFAULT_CSS_PATHS]
 
     def get_styles(self):
         styles = self.provided_css or []
