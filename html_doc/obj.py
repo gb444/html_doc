@@ -113,17 +113,17 @@ class HtmlDoc():
             head += f"""<meta name="author" content="{self.author}">"""
         return head
 
-    def render(self):
+    def render(self, with_styles=None):
         body = self.get_body_internals()
-        styles_elements = '\n'.join([f'<style>\n{css}\n</style>' for css in self.get_styles()])
+        styles_elements = '\n'.join([f'<style>\n{css}\n</style>' for css in self.get_styles()+(with_styles or [])])
         head = self.get_header_without_styles()
         head += styles_elements
         return document.format(body=smart_conditional_tab_in(body), head=head)
 
 
-    def to_pdf(self, path):
+    def to_pdf(self, path, export_library_option=None):
         from .pdf import export_pdf_to
-        export_pdf_to(self, path)
+        export_pdf_to(self, path, export_library_option=export_library_option)
 
     def to_html(self, path):
         r = self.render()

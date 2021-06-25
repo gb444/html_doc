@@ -25,8 +25,8 @@ class PageSizes(Enum):
 
 class ExportSettings():
     def __init__(self, page_size=PageSizes.A4,
-                 margin_top=None, margin_bottom=None, margin_left=None, margin_right=None,
-                 footer_page_number=False, footer_title=False,
+                 margin_top='0.78in', margin_bottom='0.78in', margin_left='0.78in', margin_right='0.78in',
+                 footer_page_number=True, footer_title=False,
                  explicit_overrides = None):
         self.page_size = page_size or PageSizes.A4
         self.margin_top = margin_top
@@ -112,29 +112,56 @@ def export_with_pdfkit(doc, output_path, options:Optional[ExportSettings]=None):
     pdfkit.from_string(doc.render(), output_path, options=popts)
 
 
-def export_with_weasyprint(doc, output_path):
-    weasyprint.HTML(string=doc.render()).write_pdf(output_path)
+def export_with_weasyprint(doc, output_path, options:Optional[ExportSettings]=None):
+    if options is None:
+        options = ExportSettings()
+    footers = ""
+    if options.footer_title:
+        footers += f"""
+            @bottom-left {{
+                content: string(title);
+            }}
+"""
+    if options.footer_page_number:
+        footers += f"""
+            @bottom-right {{
+                content: "Page " counter(page) " of " counter(pages);
+            }}
+"""
+    styles = f"""
+    @page {{
+        margin-left:{options.margin_left};
+        margin-right:{options.margin_right};
+        margin-top:{options.margin_top};
+        margin-bottom:{options.margin_bottom};
+        size: {options.page_size.value};
+        {footers}
+    }}
+    """
+    weasyprint.HTML(string=doc.render(with_styles=[styles])).write_pdf(output_path)
 
-def export_pdf_to(doc, output_path, export_library_option=ExportLibraryPreference.PdfkitPreference):
+def export_pdf_to(doc, output_path,
+                  options=None,
+                  export_library_option=ExportLibraryPreference.WeasyprintPreference):
     if pdfkit is None and weasyprint is None:
         raise ModuleNotFoundError("Neither pdfkit nor weasyprint are available - export failed")
     if export_library_option == ExportLibraryPreference.PdfkitOnly:
         if pdfkit is None:
             raise ModuleNotFoundError("pdfkit not found - export failed with option PdfkitOnly")
         else:
-            export_with_pdfkit(doc, output_path)
+            export_with_pdfkit(doc, output_path, options=options)
     elif export_library_option == ExportLibraryPreference.PdfkitPreference:
         if pdfkit is None:
-            export_with_weasyprint(doc, output_path)
+            export_with_weasyprint(doc, output_path, options=options)
         else:
             export_with_pdfkit(doc, output_path)
     elif export_library_option == ExportLibraryPreference.WeasyprintPreference:
         if weasyprint is None:
-            export_with_pdfkit(doc, output_path)
+            export_with_pdfkit(doc, output_path, options=options)
         else:
-            export_with_weasyprint(doc, output_path)
+            export_with_weasyprint(doc, output_path, options=options)
     elif export_library_option == ExportLibraryPreference.WeasyprintOnly:
         if weasyprint is None:
             raise ModuleNotFoundError("weasyprint not found - export failed with option WeasyprintOnly")
         else:
-            export_with_weasyprint(doc, output_path)
+            export_with_weasyprint(doc, output_path, options=options)

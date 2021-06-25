@@ -165,8 +165,10 @@ def test_document():
     return d
 
 def test_pdf():
+    from html_doc import ExportLibraryPreference
     d = make_standard_doc()
-    d.to_pdf("tests/outputs/test_document.pdf")
+    d.to_pdf("tests/outputs/test_document_pdfkit.pdf", export_library_option=ExportLibraryPreference.PdfkitPreference)
+    d.to_pdf("tests/outputs/test_document_weasyprint.pdf", export_library_option=ExportLibraryPreference.WeasyprintPreference)
 
 def test_extend():
     d = HtmlDoc()
